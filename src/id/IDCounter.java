@@ -1,3 +1,5 @@
+package id;
+
 public class IDCounter {
     private int idCounter = 0;
 

@@ -1,3 +1,5 @@
+package types;
+
 public class Subtask extends Task {
     private int idEpic;
 
@@ -12,7 +14,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "types.Subtask{" +
                 "title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
