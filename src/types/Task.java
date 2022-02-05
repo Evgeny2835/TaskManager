@@ -40,7 +40,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "types.Task{" +
+        return "Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +

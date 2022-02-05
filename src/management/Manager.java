@@ -1,5 +1,6 @@
 package management;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import id.IDCounter;
@@ -13,16 +14,16 @@ public class Manager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private IDCounter idCounter = new IDCounter();                           // генератор ID для всех типов задач
 
-    public HashMap<Integer, Task> getTasks() {
-        return new HashMap<>(tasks);
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return new HashMap<>(epics);
+    public ArrayList<Epic> getEpics() {
+        return new ArrayList<>(epics.values());
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return new HashMap<>(subtasks);
+    public ArrayList<Subtask> getSubtasks() {
+        return new ArrayList<>(subtasks.values());
     }
 
     public HashMap<Integer, Subtask> getSubtasksOfEpic(int id) {
