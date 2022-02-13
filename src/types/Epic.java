@@ -3,9 +3,9 @@ package types;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private HashMap<Integer, Subtask> subtasksOfEpic = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasksOfEpic = new HashMap<>();
 
-    public Epic(String title, String description, String status) {
+    public Epic(String title, String description, Status status) {
         super(title, description, status);
     }
 
@@ -18,25 +18,25 @@ public class Epic extends Task {
     }
 
     @Override
-    public String getStatus() {                            // расчет статусов эпиков при обращении к его полю статус
+    public Status getStatus() {                            // расчет статусов эпиков при обращении к его полю статус
         int statusNewCounter = 0;
         int statusDoneCounter = 0;
         if (getSubtasksOfEpic().isEmpty()) {
-            return "NEW";
+            return Status.NEW;
         } else {
             for (Subtask tmp : getSubtasksOfEpic().values()) {
-                if (tmp.getStatus().equals("NEW")) {
+                if (tmp.getStatus() == Status.NEW) {
                     statusNewCounter++;
-                } else if (tmp.getStatus().equals("DONE")) {
+                } else if (tmp.getStatus() == Status.DONE) {
                     statusDoneCounter++;
                 }
             }
             if (statusNewCounter == getSubtasksOfEpic().size()) {
-                return "NEW";
+                return Status.NEW;
             } else if (statusDoneCounter == getSubtasksOfEpic().size()) {
-                return "DONE";
+                return Status.DONE;
             } else {
-                return "IN_PROGRESS";
+                return Status.IN_PROGRESS;
             }
         }
     }
@@ -63,6 +63,7 @@ public class Epic extends Task {
     }
 
     @Override
-    public void setStatus(String status) {}            // пользователь не может корректировать статус эпика
+    public void setStatus(Status status) {
+    }                                              // пользователь не может корректировать статус эпика
 }
 

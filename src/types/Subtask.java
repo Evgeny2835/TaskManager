@@ -1,9 +1,9 @@
 package types;
 
 public class Subtask extends Task {
-    private int idEpic;
+    private final int idEpic;
 
-    public Subtask(String title, String description, String status, int idEpic) {
+    public Subtask(String title, String description, Status status, int idEpic) {
         super(title, description, status);
         this.idEpic = idEpic;
     }

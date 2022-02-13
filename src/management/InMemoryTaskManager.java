@@ -8,33 +8,44 @@ import types.Epic;
 import types.Subtask;
 import types.Task;
 
-public class Manager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private IDCounter idCounter = new IDCounter();                           // генератор ID для всех типов задач
+public class InMemoryTaskManager implements TaskManager {
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final IDCounter idCounter = new IDCounter();                      // генератор ID для всех типов задач
+    private final HistoryManager historyManager;
 
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    @Override
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
+    @Override
     public ArrayList<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
+    @Override
     public ArrayList<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
+    @Override
     public HashMap<Integer, Subtask> getSubtasksOfEpic(int id) {
         Epic epic = epics.get(id);
         return epic.getSubtasksOfEpic();
     }
 
+    @Override
     public void deleteAllTasks() {
         tasks.clear();
     }
 
+    @Override
     public void deleteAllEpics() {
         for (Epic tmp : epics.values()) {               // удаление подзадач у каждого эпика
             tmp.deleteAllSubtasks();
@@ -43,6 +54,7 @@ public class Manager {
         epics.clear();                                  // очистка хеш таблицы всех эпиков
     }
 
+    @Override
     public void deletesAllSubtasks() {
         for (Epic tmp : epics.values()) {              // удаление подзадач у каждого эпика
             tmp.deleteAllSubtasks();
@@ -50,23 +62,31 @@ public class Manager {
         subtasks.clear();                              // очистка хеш таблицы всех подзадач
     }
 
+    @Override
     public Task getTaskById(int id) {
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
+    @Override
     public Epic getEpicById(int id) {
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
+    @Override
     public Subtask getSubtaskById(int id) {
+        historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
+    @Override
     public void addTask(Task task) {
         task.setId(idCounter.getIdCounter());        // присвоение ID новому объекту (аналогично у других объектов)
         tasks.put(task.getId(), task);
     }
 
+    @Override
     public void addEpic(Epic epic) {
         if (epic.getSubtasksOfEpic().isEmpty()) {        // метод обрабатывает только новые эпики без подзадач
             epic.setId(idCounter.getIdCounter());        // пользователь не должен предоставлять эпики с подзадачами
@@ -74,6 +94,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void addSubtask(Subtask subtask) {
         if (epics.containsKey(subtask.getIdEpic())) { // если новая подзадача, эпик уже должен существовать
             subtask.setId(idCounter.getIdCounter());  // реализовано двойное хранение объектов типа Subtask
@@ -83,20 +104,23 @@ public class Manager {
         }
     }
 
+    @Override
     public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
         }
     }
 
+    @Override
     public void updateEpic(Epic epic) {                      // подзадачи будут обрабатываться в методах для подзадач
         if (epics.containsKey(epic.getId()) &&               // обновление эпиков только при отсутствии противоречий
                 isEqualsSubtasks(epics.get(epic.getId()).getSubtasksOfEpic(),     // по состоянию хеш таблиц подзадач
-                                 epic.getSubtasksOfEpic())) {                     // нового и старого эпиков
+                        epic.getSubtasksOfEpic())) {                     // нового и старого эпиков
             epics.put(epic.getId(), epic);
         }
     }
 
+    @Override
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId()) && epics.containsKey(subtask.getIdEpic())) {
             subtasks.put(subtask.getId(), subtask);
@@ -105,12 +129,14 @@ public class Manager {
         }
     }
 
+    @Override
     public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
         }
     }
 
+    @Override
     public void deleteEpicById(int id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
@@ -122,6 +148,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void deleteSubtaskById(int id) {
         if (subtasks.containsKey(id)) {
             Subtask subtask = subtasks.get(id);
@@ -147,11 +174,3 @@ public class Manager {
         return true;
     }
 }
-
-
-
-
-
-
-
-
