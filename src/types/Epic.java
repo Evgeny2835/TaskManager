@@ -66,4 +66,3 @@ public class Epic extends Task {
     public void setStatus(Status status) {
     }                                              // пользователь не может корректировать статус эпика
 }
-

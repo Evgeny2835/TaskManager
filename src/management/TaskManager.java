@@ -1,20 +1,20 @@
 package management;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import types.Epic;
 import types.Subtask;
 import types.Task;
 
 public interface TaskManager {
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
-    HashMap<Integer, Subtask> getSubtasksOfEpic(int id);
+    Map<Integer, Subtask> getSubtasksOfEpic(int id);
 
     void deleteAllTasks();
 
@@ -45,12 +45,6 @@ public interface TaskManager {
     void deleteEpicById(int id);
 
     void deleteSubtaskById(int id);
+
+    List<Task> history();
 }
-
-
-
-
-
-
-
-

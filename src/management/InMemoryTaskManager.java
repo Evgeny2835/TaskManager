@@ -2,6 +2,8 @@ package management;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import id.IDCounter;
 import types.Epic;
@@ -9,9 +11,9 @@ import types.Subtask;
 import types.Task;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final IDCounter idCounter = new IDCounter();                      // генератор ID для всех типов задач
     private final HistoryManager historyManager;
 
@@ -20,22 +22,22 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public ArrayList<Epic> getEpics() {
+    public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasks() {
+    public List<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasksOfEpic(int id) {
+    public Map<Integer, Subtask> getSubtasksOfEpic(int id) {
         Epic epic = epics.get(id);
         return epic.getSubtasksOfEpic();
     }
@@ -159,8 +161,13 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private boolean isEqualsSubtasks(HashMap<Integer, Subtask> map1, HashMap<Integer, Subtask> map2) {
-        if (map1.isEmpty() && map2.isEmpty()) {              // метод сравнения содерэимого хеш таблиц подзадач
+    @Override
+    public List<Task> history() {
+        return historyManager.getHistory();
+    }
+
+    private boolean isEqualsSubtasks(Map<Integer, Subtask> map1, Map<Integer, Subtask> map2) {
+        if (map1.isEmpty() && map2.isEmpty()) {              // метод сравнения содержимого хеш таблиц подзадач
             return true;
         }
         if (map1.size() != map2.size()) {

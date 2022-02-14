@@ -1,10 +1,8 @@
 package start;
 
-import management.HistoryManager;
 import management.Managers;
 import management.TaskManager;
 import types.Epic;
-import types.Status;
 import types.Subtask;
 import types.Task;
 
@@ -12,8 +10,7 @@ import static types.Status.NEW;
 
 public class Main {
     public static void main(String[] args) {
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        TaskManager taskManager = Managers.getDefault(historyManager);
+        TaskManager taskManager = Managers.getDefault(Managers.getDefaultHistory());
         Task task1 = new Task("Получить посылку", "Посылка от бабушки", NEW);
         taskManager.addTask(task1);
         Task task2 = new Task("Написать письмо", "Маме об отпуске", NEW);
@@ -39,40 +36,19 @@ public class Main {
                 NEW,
                 6);
         taskManager.addSubtask(subTask1Epic2);
-     /*   System.out.println(taskManager.getTasks());                 // тестирование 2 спринта
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
-        System.out.println();
-        task1.setStatus(Status.DONE);
-        taskManager.updateTask(task1);
-        epic1.setStatus(Status.DONE);
-        taskManager.updateEpic(epic1);
-        subTask1Epic1.setStatus(Status.DONE);
-        taskManager.updateSubtask(subTask1Epic1);
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
-        System.out.println();
-        taskManager.deleteTaskById(2);                                // удаление влияет на тестирование 3 спринта
-        taskManager.deleteEpicById(3);
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());*/
-     /*   taskManager.getTaskById(1);                                 // тестирование 3 спринта
-        taskManager.getEpicById(3);
-        taskManager.getSubtaskById(4);
-        taskManager.getTaskById(1);
-        taskManager.getEpicById(3);
-        taskManager.getSubtaskById(4);
-        taskManager.getTaskById(1);
-        taskManager.getEpicById(3);
-        taskManager.getSubtaskById(4);
-        taskManager.getTaskById(1);
-        taskManager.getSubtaskById(4);
-        for (Task tmp : historyManager.getHistory()) {
-            System.out.println(tmp);
-        }*/
+           taskManager.getTaskById(1);                                 // тестирование работоспособности истории
+           taskManager.getEpicById(3);
+           taskManager.getSubtaskById(4);
+           taskManager.getTaskById(1);
+           taskManager.getEpicById(3);
+           taskManager.getSubtaskById(4);
+           taskManager.getTaskById(1);
+           taskManager.getEpicById(3);
+           taskManager.getSubtaskById(4);
+           taskManager.getTaskById(1);
+           taskManager.getSubtaskById(4);
+           for (Task tmp : taskManager.history()) {
+               System.out.println(tmp);
+           }
     }
 }
-
-
