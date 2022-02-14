@@ -14,7 +14,7 @@ public interface TaskManager {
 
     List<Subtask> getSubtasks();
 
-    Map<Integer, Subtask> getSubtasksOfEpic(int id);
+    List<Subtask> getSubtasksOfEpic(int id);
 
     void deleteAllTasks();
 

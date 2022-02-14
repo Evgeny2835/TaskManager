@@ -1,20 +1,21 @@
 package types;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private final HashMap<Integer, Subtask> subtasksOfEpic = new HashMap<>();
+    private final List<Subtask> subtasksOfEpic = new ArrayList<>();
 
     public Epic(String title, String description, Status status) {
         super(title, description, status);
     }
 
-    public HashMap<Integer, Subtask> getSubtasksOfEpic() {
-        return new HashMap<>(subtasksOfEpic);
+    public List<Subtask> getSubtasksOfEpic() {
+        return new ArrayList<>(subtasksOfEpic);
     }
 
     public void addSubtasksOfEpic(Subtask subtask) {
-        subtasksOfEpic.put(subtask.getId(), subtask);
+        subtasksOfEpic.add(subtask);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class Epic extends Task {
         if (getSubtasksOfEpic().isEmpty()) {
             return Status.NEW;
         } else {
-            for (Subtask tmp : getSubtasksOfEpic().values()) {
+            for (Subtask tmp : getSubtasksOfEpic()) {
                 if (tmp.getStatus() == Status.NEW) {
                     statusNewCounter++;
                 } else if (tmp.getStatus() == Status.DONE) {
@@ -42,8 +43,8 @@ public class Epic extends Task {
     }
 
     public void deleteSubtask(int id) {
-        if (subtasksOfEpic.containsKey(id)) {
-            subtasksOfEpic.remove(id);
+        if (subtasksOfEpic.contains(subtasksOfEpic.get(id))) {
+            subtasksOfEpic.remove(subtasksOfEpic.get(id));
         }
     }
 

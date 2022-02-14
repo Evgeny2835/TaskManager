@@ -46,7 +46,7 @@ public class Main {
            taskManager.getEpicById(3);
            taskManager.getSubtaskById(4);
            taskManager.getTaskById(1);
-           taskManager.getSubtaskById(4);
+           // taskManager.getSubtaskById(4);
            for (Task tmp : taskManager.history()) {
                System.out.println(tmp);
            }

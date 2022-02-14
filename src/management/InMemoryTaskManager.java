@@ -37,7 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Map<Integer, Subtask> getSubtasksOfEpic(int id) {
+    public List<Subtask> getSubtasksOfEpic(int id) {
         Epic epic = epics.get(id);
         return epic.getSubtasksOfEpic();
     }
@@ -49,8 +49,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        for (Epic tmp : epics.values()) {               // удаление подзадач у каждого эпика
-            tmp.deleteAllSubtasks();
+        for (Epic epic : epics.values()) {               // удаление подзадач у каждого эпика
+            epic.deleteAllSubtasks();
         }
         subtasks.clear();                               // очистка хеш таблицы всех подзадач
         epics.clear();                                  // очистка хеш таблицы всех эпиков
@@ -58,8 +58,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deletesAllSubtasks() {
-        for (Epic tmp : epics.values()) {              // удаление подзадач у каждого эпика
-            tmp.deleteAllSubtasks();
+        for (Epic epic : epics.values()) {              // удаление подзадач у каждого эпика
+            epic.deleteAllSubtasks();
         }
         subtasks.clear();                              // очистка хеш таблицы всех подзадач
     }
@@ -116,7 +116,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic epic) {                      // подзадачи будут обрабатываться в методах для подзадач
         if (epics.containsKey(epic.getId()) &&               // обновление эпиков только при отсутствии противоречий
-                isEqualsSubtasks(epics.get(epic.getId()).getSubtasksOfEpic(),     // по состоянию хеш таблиц подзадач
+                isEqualsSubtasks(epics.get(epic.getId()).getSubtasksOfEpic(),     // по состоянию списков подзадач
                         epic.getSubtasksOfEpic())) {                     // нового и старого эпиков
             epics.put(epic.getId(), epic);
         }
@@ -142,8 +142,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpicById(int id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
-            for (Integer tmp : epic.getSubtasksOfEpic().keySet()) { //удаление всех подзадач эпика из общей хеш таблицы
-                subtasks.remove(tmp);
+            for (Subtask subtask : epic.getSubtasksOfEpic()) { //удаление всех подзадач эпика из общего списка
+                subtasks.remove(subtask);
             }
             epic.deleteAllSubtasks();                        // удаление всех подзадач у объекта эпика
             epics.remove(id);                                // удаление самого эпика
@@ -166,18 +166,11 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private boolean isEqualsSubtasks(Map<Integer, Subtask> map1, Map<Integer, Subtask> map2) {
-        if (map1.isEmpty() && map2.isEmpty()) {              // метод сравнения содержимого хеш таблиц подзадач
+    private boolean isEqualsSubtasks(List<Subtask> list1, List<Subtask> list2) {
+        if ((list1.isEmpty() && list2.isEmpty()) ||
+                (list1.size() == list2.size())) {              // метод сравнения содержимого списков подзадач
             return true;
         }
-        if (map1.size() != map2.size()) {
-            return false;
-        }
-        for (Integer i : map1.keySet()) {
-            if (!map1.get(i).equals(map2.get(i))) {
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 }
