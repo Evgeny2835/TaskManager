@@ -143,7 +143,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             for (Subtask subtask : epic.getSubtasksOfEpic()) { //удаление всех подзадач эпика из общего списка
-                subtasks.remove(subtask);
+                subtasks.remove(subtask.getId());
             }
             epic.deleteAllSubtasks();                        // удаление всех подзадач у объекта эпика
             epics.remove(id);                                // удаление самого эпика
@@ -167,10 +167,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean isEqualsSubtasks(List<Subtask> list1, List<Subtask> list2) {
-        if ((list1.isEmpty() && list2.isEmpty()) ||
-                (list1.size() == list2.size())) {              // метод сравнения содержимого списков подзадач
-            return true;
-        }
-        return false;
+        // метод сравнения содержимого списков подзадач
+        return (list1.isEmpty() && list2.isEmpty()) ||
+                (list1.size() == list2.size());
     }
 }

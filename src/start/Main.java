@@ -36,19 +36,19 @@ public class Main {
                 NEW,
                 6);
         taskManager.addSubtask(subTask1Epic2);
-           taskManager.getTaskById(1);                                 // тестирование работоспособности истории
-           taskManager.getEpicById(3);
-           taskManager.getSubtaskById(4);
-           taskManager.getTaskById(1);
-           taskManager.getEpicById(3);
-           taskManager.getSubtaskById(4);
-           taskManager.getTaskById(1);
-           taskManager.getEpicById(3);
-           taskManager.getSubtaskById(4);
-           taskManager.getTaskById(1);
-           // taskManager.getSubtaskById(4);
-           for (Task tmp : taskManager.history()) {
-               System.out.println(tmp);
-           }
+        taskManager.getTaskById(1);                             // тестирование работоспособности истории
+        taskManager.getEpicById(3);
+        taskManager.getSubtaskById(4);
+        taskManager.getTaskById(1);
+        taskManager.getEpicById(3);
+        taskManager.getSubtaskById(4);
+        taskManager.getTaskById(1);
+        taskManager.getEpicById(3);
+        taskManager.getSubtaskById(4);
+        taskManager.getTaskById(1);
+        taskManager.getSubtaskById(4);
+        for (Task tmp : taskManager.history()) {
+            System.out.println(tmp);
+        }
     }
 }
