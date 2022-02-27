@@ -42,10 +42,8 @@ public class Epic extends Task {
         }
     }
 
-    public void deleteSubtask(int id) {
-        if (subtasksOfEpic.contains(subtasksOfEpic.get(id))) {
-            subtasksOfEpic.remove(subtasksOfEpic.get(id));
-        }
+    public void deleteSubtask(Subtask subtask) {
+        subtasksOfEpic.remove(subtask);
     }
 
     public void deleteAllSubtasks() {

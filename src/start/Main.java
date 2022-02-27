@@ -27,28 +27,40 @@ public class Main {
                 NEW,
                 3);
         taskManager.addSubtask(subTask2Epic1);
+        Subtask subTask3Epic1 = new Subtask("Подготовить одежду",
+                "Ожидается дождь, проверить плащ и палатку",
+                NEW,
+                3);
+        taskManager.addSubtask(subTask3Epic1);
         Epic epic2 = new Epic("Выезд в отпуск",
                 "Место назначения - Сочи",
                 NEW);
         taskManager.addEpic(epic2);
-        Subtask subTask1Epic2 = new Subtask("Подготовить машину",
-                "Осмотр машины, устранение неисправностей",
-                NEW,
-                6);
-        taskManager.addSubtask(subTask1Epic2);
-        taskManager.getTaskById(1);                             // тестирование работоспособности истории
+
+        taskManager.getTaskById(1);
+        taskManager.getTaskById(2);
         taskManager.getEpicById(3);
         taskManager.getSubtaskById(4);
+        taskManager.getSubtaskById(5);
+        taskManager.getSubtaskById(6);
+        taskManager.getEpicById(7);
+        for (Task task : taskManager.history()) {
+            System.out.println(task);
+        }
+        System.out.println();
         taskManager.getTaskById(1);
         taskManager.getEpicById(3);
-        taskManager.getSubtaskById(4);
-        taskManager.getTaskById(1);
-        taskManager.getEpicById(3);
-        taskManager.getSubtaskById(4);
-        taskManager.getTaskById(1);
-        taskManager.getSubtaskById(4);
-        for (Task tmp : taskManager.history()) {
-            System.out.println(tmp);
+        taskManager.getSubtaskById(6);
+        for (Task task : taskManager.history()) {
+            System.out.println(task);
+        }
+        System.out.println();
+        taskManager.getSubtaskById(6);
+        taskManager.deleteEpicById(3);
+        taskManager.deleteTaskById(1);
+        taskManager.deleteSubtaskById(4);
+        for (Task task : taskManager.history()) {
+            System.out.println(task);
         }
     }
 }

@@ -44,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        tasks.clear();
+       tasks.clear();
     }
 
     @Override
@@ -135,6 +135,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(id);
         }
     }
 
@@ -142,11 +143,13 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpicById(int id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
-            for (Subtask subtask : epic.getSubtasksOfEpic()) { //удаление всех подзадач эпика из общего списка
-                subtasks.remove(subtask.getId());
+            for (Subtask subtask : epic.getSubtasksOfEpic()) {
+                subtasks.remove(subtask.getId());              // удаление всех подзадач эпика из общего списка
+                historyManager.remove(subtask.getId());        // удаление всех подзадач эпика из истории
             }
             epic.deleteAllSubtasks();                        // удаление всех подзадач у объекта эпика
             epics.remove(id);                                // удаление самого эпика
+            historyManager.remove(id);                       // удаление эпика из истории
         }
     }
 
@@ -156,8 +159,9 @@ public class InMemoryTaskManager implements TaskManager {
             Subtask subtask = subtasks.get(id);
             int idEpic = subtask.getIdEpic();
             Epic epic = epics.get(idEpic);
-            epic.deleteSubtask(id);                          // удаление подзадачи у конкретного объекта эпика
+            epic.deleteSubtask(subtask);                     // удаление подзадачи у конкретного объекта эпика
             subtasks.remove(id);                             // удаление подзадачи из общей хеш таблицы
+            historyManager.remove(id);                       // удаление подзадачи из истории
         }
     }
 
