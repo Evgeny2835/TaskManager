@@ -5,32 +5,21 @@ import types.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
-    static class Node {
-        private Task data;
-        private Node prev;
-        private Node next;
-
-        public Node(Node prev, Task data, Node next) {
-            this.data = data;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private Node first;                                           // переменная хранит ссылку на первый элемент
-    private Node last;                                            // переменная хранит ссылку на последний элемент
-    private HashMap<Integer, Node> history = new HashMap<>();
+    private Node first;                                               // для хранения ссылки на головной элемент узла
+    private Node last;                                                // для хранения ссылки на последний элемент узла
+    private final HashMap<Integer, Node> history = new HashMap<>();   // для хранения ссылки на историю просмотра задач
 
     @Override
     public void add(Task task) {
         if (task == null) {
             return;
         }
-        linkLast(task);
+        if (history.containsKey(task.getId())) {
+            remove(task.getId());                           // история должна хранить только последний просмотр задачи
+        }                                                   // при наличии истории, удаляем старую запись о просмотре и
+        history.put(task.getId(), linkLast(task));          // добавляем новую
     }
 
     @Override
@@ -39,56 +28,62 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id) {
-        removeNode(history.get(id));
+    public void remove(int id) {                                  // удаление истории просмотра задачи из 2 этапов
+        removeNode(history.get(id));                              // удаление узла
+        history.remove(id);                                       // удаление сведений из хеш-таблицы
     }
 
-    private void linkLast(Task task) {
-        final Node lastNode = last;                               // запоминаем ссылку на последнюю ноду
-        final Node newNode = new Node(lastNode, task, null); // создаем новую ноду с учетом предыдущей
-        last = newNode;                                           // переменная last теперь хранит ссылку на новую ноду
-        if (lastNode == null) {                                   // проверяем, не является ли ссылка на последнюю ноду
-            first = newNode;                                      // пустой, если, да, то ноды ранее не создавались, ссылка на первую и единственную пока ноду
-        } else {                                                  // если же нода не является единственной, то у ноды,
-            lastNode.next = newNode;                              // которая ранее была последней, нужно скорректировать ссылку на последюю
-        }                                                         // ноду, она теперь не null, а ссылается на новую ноду
-        if (history.containsKey(task.getId())) {
-            remove(task.getId());
+    private Node linkLast(Task task) {
+        final Node lastNode = last;
+        final Node newNode = new Node(lastNode, task, null);
+        last = newNode;
+        if (lastNode == null) {
+            first = newNode;
+        } else {
+            lastNode.next = newNode;
         }
-        history.put(task.getId(), newNode);
+        return newNode;
     }
 
     private List<Task> getTasks() {
-        List<Task> tasksList = new ArrayList<>();
-        Node node = this.first;
-        while (node != null) {
-            tasksList.add(node.data);
+        List<Task> tasksList = new ArrayList<>(20);
+        Node node = first;
+        while (node != null) {                                // в цикле перебираем по цепочке узлы
+            tasksList.add(node.task);                         // для добавления очередной задачи по порядку
             node = node.next;
         }
         return tasksList;
     }
 
-      private void removeNode(Node node) {
+    private void removeNode(Node node) {
         if (node != null) {
-            final Task task = node.data;
             final Node next = node.next;
             final Node prev = node.prev;
-
-            if (prev == null) {              // для случая удаления головного элемента
-                first = next;                // переменная класса first теперь хранит ссылку на следующий элемент
+            if (prev == null) {
+                first = next;
             } else {
-                prev.next = next;            // предыдущий элемент теперь ссылается на следующий элемент
-                node.prev = null;            // удаляемый элемент не ссылается на предшествующий
+                prev.next = next;
+                node.prev = null;
             }
-
-            if (next == null) {              // для случая удаления последнего элемента
-                last = prev;                 // переменная класса last теперь хранит ссылку на предыдущий элемент
+            if (next == null) {
+                last = prev;
             } else {
-                next.prev = prev;            // следующий элемент теперь ссылается на предыдущий
-                node.next = null;            // удаляймый элемент не ссылается на следующий
+                next.prev = prev;
+                node.next = null;
             }
-            node.data = null;                // удаление ссылки на хранимый объект
-            history.remove(task.getId());    // удаление задачи из истории
+            node.task = null;
+        }
+    }
+
+    static class Node {
+        private Task task;
+        private Node prev;
+        private Node next;
+
+        public Node(Node prev, Task task, Node next) {
+            this.task = task;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }

@@ -55,10 +55,12 @@ public class Main {
             System.out.println(task);
         }
         System.out.println();
-        taskManager.getSubtaskById(6);
-        taskManager.deleteEpicById(3);
         taskManager.deleteTaskById(1);
+        taskManager.deleteAllTasks();
+        taskManager.deleteEpicById(3);
+        taskManager.deleteAllEpics();
         taskManager.deleteSubtaskById(4);
+        taskManager.deletesAllSubtasks();
         for (Task task : taskManager.history()) {
             System.out.println(task);
         }
