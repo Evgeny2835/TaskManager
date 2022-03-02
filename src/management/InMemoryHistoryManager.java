@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private Node first;                                               // для хранения ссылки на головной элемент узла
-    private Node last;                                                // для хранения ссылки на последний элемент узла
-    private final HashMap<Integer, Node> history = new HashMap<>();   // для хранения ссылки на историю просмотра задач
+    private Node first;
+    private Node last;
+    private final HashMap<Integer, Node> history = new HashMap<>();
 
     @Override
     public void add(Task task) {
@@ -17,9 +17,9 @@ public class InMemoryHistoryManager implements HistoryManager {
             return;
         }
         if (history.containsKey(task.getId())) {
-            remove(task.getId());                           // история должна хранить только последний просмотр задачи
-        }                                                   // при наличии истории, удаляем старую запись о просмотре и
-        history.put(task.getId(), linkLast(task));          // добавляем новую
+            remove(task.getId());
+        }
+        history.put(task.getId(), linkLast(task));
     }
 
     @Override
@@ -28,9 +28,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id) {                                  // удаление истории просмотра задачи из 2 этапов
-        removeNode(history.get(id));                              // удаление узла
-        history.remove(id);                                       // удаление сведений из хеш-таблицы
+    public void remove(int id) {
+        removeNode(history.get(id));
+        history.remove(id);
     }
 
     private Node linkLast(Task task) {
@@ -48,8 +48,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     private List<Task> getTasks() {
         List<Task> tasksList = new ArrayList<>(20);
         Node node = first;
-        while (node != null) {                                // в цикле перебираем по цепочке узлы
-            tasksList.add(node.task);                         // для добавления очередной задачи по порядку
+        while (node != null) {
+            tasksList.add(node.task);
             node = node.next;
         }
         return tasksList;
