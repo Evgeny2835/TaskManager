@@ -3,6 +3,8 @@ package management;
 import types.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -71,7 +73,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new ManagerSaveException();
         }
         fileBackedTasksManager.idCounter.setIdCounter(maxIdTaskInFile);
         return fileBackedTasksManager;
@@ -203,8 +205,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         String filePath = "/home/user/Yandex.Disk/STORAGE/LEARNING/IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
+        // для тестирования - очистка содержимого файла
+        try {
+            FileWriter fileWriter = new FileWriter(filePath);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write("");
+            bufferedWriter.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         TaskManager taskManager = loadFromFile(new File(filePath));
-
         Task task1 = new Task("Получить посылку", "Посылка от бабушки", TaskStatus.NEW);
         taskManager.addTask(task1);
         Task task2 = new Task("Написать письмо", "Маме об отпуске", TaskStatus.NEW);
@@ -235,8 +245,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         taskManager.getEpicById(3);
         taskManager.getSubtaskById(6);
 
+        System.out.println("История после создания и просмотра задач:");
         for (Task task : taskManager.history()) {
             System.out.println(task);
         }
+
+        TaskManager taskManagerNew = loadFromFile(new File(filePath));
+        System.out.println();
+        System.out.println("История после восстановления информации из файла:");
+        for (Task task : taskManagerNew.history()) {
+            System.out.println(task);
+        }
+        System.out.println();
+        System.out.println("Результат сравнения списка задач после создания и просмотра задач," +
+                "восстановления информации из файла:");
+        System.out.println(taskManager.getTasks().equals(taskManagerNew.getTasks()) &&
+                taskManager.getEpics().equals(taskManagerNew.getEpics()) &&
+                taskManager.getSubtasks().equals(taskManagerNew.getSubtasks()));
     }
 }
