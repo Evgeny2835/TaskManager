@@ -3,8 +3,8 @@ package types;
 public class Subtask extends Task {
     private final int idEpic;
 
-    public Subtask(String title, String description, Status status, int idEpic) {
-        super(title, description, status);
+    public Subtask(String name, String description, Status status, int idEpic) {
+        super(name, description, status);
         this.idEpic = idEpic;
     }
 
@@ -14,12 +14,12 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status='" + getStatus() + '\'' +
-                ", id=" + getId() +
-                ", idEpic=" + idEpic +
-                '}';
+        return String.format("%d,%s,%s,%s,%s,%d",
+                getId(),
+                TypesOfTasks.SUBTASK,
+                getName(),
+                getStatus(),
+                getDescription(),
+                getIdEpic());
     }
 }

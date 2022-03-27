@@ -6,8 +6,8 @@ import java.util.List;
 public class Epic extends Task {
     private final List<Subtask> subtasksOfEpic = new ArrayList<>();
 
-    public Epic(String title, String description, Status status) {
-        super(title, description, status);
+    public Epic(String name, String description, Status status) {
+        super(name, description, status);
     }
 
     public List<Subtask> getSubtasksOfEpic() {
@@ -52,16 +52,15 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status='" + getStatus() + '\'' +
-                ", id=" + getId() +
-                ", subtasksListSize=" + subtasksOfEpic.size() +
-                '}';
+        return String.format("%d,%s,%s,%s,%s",
+                getId(),
+                TypesOfTasks.EPIC,
+                getName(),
+                getStatus(),
+                getDescription());
     }
 
     @Override
     public void setStatus(Status status) {
-    }                                              // пользователь не может корректировать статус эпика
+    }
 }

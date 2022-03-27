@@ -11,11 +11,11 @@ import types.Subtask;
 import types.Task;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final IDCounter idCounter = new IDCounter();
-    private final HistoryManager historyManager;
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HistoryManager historyManager;
+    protected final IDCounter idCounter = new IDCounter();
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -90,22 +90,37 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
-        task.setId(idCounter.getIdCounter());
+        if (tasks.containsKey(task.getId())) {
+            return;
+        }
+        if (task.getId() == 0) {
+            task.setId(idCounter.getIdCounter());
+        }
         tasks.put(task.getId(), task);
     }
 
     @Override
     public void addEpic(Epic epic) {
+        if (epics.containsKey(epic.getId())) {
+            return;
+        }
         if (epic.getSubtasksOfEpic().isEmpty()) {
-            epic.setId(idCounter.getIdCounter());
+            if (epic.getId() == 0) {
+                epic.setId(idCounter.getIdCounter());
+            }
             epics.put(epic.getId(), epic);
         }
     }
 
     @Override
     public void addSubtask(Subtask subtask) {
+        if (subtasks.containsKey(subtask.getId())) {
+            return;
+        }
         if (epics.containsKey(subtask.getIdEpic())) {
-            subtask.setId(idCounter.getIdCounter());
+            if (subtask.getId() == 0) {
+                subtask.setId(idCounter.getIdCounter());
+            }
             subtasks.put(subtask.getId(), subtask);
             Epic epic = epics.get(subtask.getIdEpic());
             epic.addSubtasksOfEpic(subtask);

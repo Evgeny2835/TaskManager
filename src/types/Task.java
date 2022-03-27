@@ -3,19 +3,19 @@ package types;
 import java.util.Objects;
 
 public class Task {
-    private final String title;
+    private final String name;
     private final String description;
     private Status status;
     private int id;
 
-    public Task(String title, String description, Status status) {
-        this.title = title;
+    public Task(String name, String description, Status status) {
+        this.name = name;
         this.description = description;
         this.status = status;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
@@ -40,12 +40,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", id=" + id +
-                '}';
+        return String.format("%d,%s,%s,%s,%s",
+                getId(),
+                TypesOfTasks.TASK,
+                getName(),
+                getStatus(),
+                getDescription());
     }
 
     @Override
@@ -53,12 +53,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(title, task.title) &&
+        return id == task.id && Objects.equals(name, task.name) &&
                 Objects.equals(description, task.description) && Objects.equals(status, task.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, status, id);
+        return Objects.hash(name, description, status, id);
     }
 }
