@@ -6,7 +6,7 @@ import java.util.List;
 public class Epic extends Task {
     private final List<Subtask> subtasksOfEpic = new ArrayList<>();
 
-    public Epic(String name, String description, Status status) {
+    public Epic(String name, String description, TaskStatus status) {
         super(name, description, status);
     }
 
@@ -19,25 +19,25 @@ public class Epic extends Task {
     }
 
     @Override
-    public Status getStatus() {                            // расчет статусов эпиков при обращении к его полю статус
+    public TaskStatus getStatus() {                            // расчет статусов эпиков при обращении к его полю статус
         int statusNewCounter = 0;
         int statusDoneCounter = 0;
         if (getSubtasksOfEpic().isEmpty()) {
-            return Status.NEW;
+            return TaskStatus.NEW;
         } else {
             for (Subtask tmp : getSubtasksOfEpic()) {
-                if (tmp.getStatus() == Status.NEW) {
+                if (tmp.getStatus() == TaskStatus.NEW) {
                     statusNewCounter++;
-                } else if (tmp.getStatus() == Status.DONE) {
+                } else if (tmp.getStatus() == TaskStatus.DONE) {
                     statusDoneCounter++;
                 }
             }
             if (statusNewCounter == getSubtasksOfEpic().size()) {
-                return Status.NEW;
+                return TaskStatus.NEW;
             } else if (statusDoneCounter == getSubtasksOfEpic().size()) {
-                return Status.DONE;
+                return TaskStatus.DONE;
             } else {
-                return Status.IN_PROGRESS;
+                return TaskStatus.IN_PROGRESS;
             }
         }
     }
@@ -61,6 +61,6 @@ public class Epic extends Task {
     }
 
     @Override
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
     }
 }

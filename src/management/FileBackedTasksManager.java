@@ -5,7 +5,7 @@ import types.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
 
     public FileBackedTasksManager(HistoryManager historyManager, File file) {
@@ -17,8 +17,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         int maxIdTaskInFile = 0;
         HistoryManager historyManager = Managers.getDefaultHistory();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(historyManager, file);
-        try (FileReader reader = new FileReader(file.toString())) {
-            BufferedReader br = new BufferedReader(reader);
+        try (FileReader reader = new FileReader(file.toString());
+             BufferedReader br = new BufferedReader(reader)) {
             while (br.ready()) {
                 String line = br.readLine();
                 if (line.isEmpty()) {
@@ -43,7 +43,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 if (TypesOfTasks.TASK.toString().equals(split[1])) {
                     Task task = new Task(split[2],
                             split[4],
-                            Status.valueOf(split[3]));
+                            TaskStatus.valueOf(split[3]));
                     task.setId(Integer.parseInt(split[0]));
                     fileBackedTasksManager.addTask(task);
                     if (task.getId() > maxIdTaskInFile) {
@@ -52,7 +52,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 } else if ((TypesOfTasks.EPIC.toString().equals(split[1]))) {
                     Epic epic = new Epic(split[2],
                             split[4],
-                            Status.valueOf(split[3]));
+                            TaskStatus.valueOf(split[3]));
                     epic.setId(Integer.parseInt(split[0]));
                     fileBackedTasksManager.addEpic(epic);
                     if (epic.getId() > maxIdTaskInFile) {
@@ -61,7 +61,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 } else if ((TypesOfTasks.SUBTASK.toString().equals(split[1]))) {
                     Subtask subtask = new Subtask(split[2],
                             split[4],
-                            Status.valueOf(split[3]),
+                            TaskStatus.valueOf(split[3]),
                             Integer.parseInt(split[5]));
                     subtask.setId(Integer.parseInt(split[0]));
                     fileBackedTasksManager.addSubtask(subtask);
@@ -202,33 +202,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     public static void main(String[] args) {
-        String filePath = "/home/user/Dropbox/STORAGE/LEARNING/IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
+        String filePath = "/home/user/Yandex.Disk/STORAGE/LEARNING/IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
         TaskManager taskManager = loadFromFile(new File(filePath));
 
-        Task task1 = new Task("Получить посылку", "Посылка от бабушки", Status.NEW);
+        Task task1 = new Task("Получить посылку", "Посылка от бабушки", TaskStatus.NEW);
         taskManager.addTask(task1);
-        Task task2 = new Task("Написать письмо", "Маме об отпуске", Status.NEW);
+        Task task2 = new Task("Написать письмо", "Маме об отпуске", TaskStatus.NEW);
         taskManager.addTask(task2);
-        Epic epic1 = new Epic("Выезд на рыбалку", "На озеро с Петром", Status.NEW);
+        Epic epic1 = new Epic("Выезд на рыбалку", "На озеро с Петром", TaskStatus.NEW);
         taskManager.addEpic(epic1);
         Subtask subTask1Epic1 = new Subtask("Подготовить удочки",
                 "Осмотр и ремонт удочек",
-                Status.NEW,
+                TaskStatus.NEW,
                 3);
         taskManager.addSubtask(subTask1Epic1);
         Subtask subTask2Epic1 = new Subtask("Подготовить наживку",
                 "Купить наживку в магазине или добыть в поле",
-                Status.NEW,
+                TaskStatus.NEW,
                 3);
         taskManager.addSubtask(subTask2Epic1);
         Subtask subTask3Epic1 = new Subtask("Подготовить одежду",
                 "Проверить плащ и палатку",
-                Status.NEW,
+                TaskStatus.NEW,
                 3);
         taskManager.addSubtask(subTask3Epic1);
         Epic epic2 = new Epic("Выезд в отпуск",
                 "Место назначения - Сочи",
-                Status.NEW);
+                TaskStatus.NEW);
         taskManager.addEpic(epic2);
 
         taskManager.getTaskById(2);

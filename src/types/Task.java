@@ -5,10 +5,10 @@ import java.util.Objects;
 public class Task {
     private final String name;
     private final String description;
-    private Status status;
+    private TaskStatus status;
     private int id;
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -22,7 +22,7 @@ public class Task {
         return description;
     }
 
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
@@ -34,7 +34,7 @@ public class Task {
         this.id = id;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
