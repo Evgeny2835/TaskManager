@@ -3,8 +3,6 @@ package management;
 import types.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -204,7 +202,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
-        String filePath = "/home/user/Yandex.Disk/STORAGE/LEARNING/IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
+        String filePath = "/home/user/Yandex.Disk/STORAGE/LEARNING/" +
+                "IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
         // для тестирования - очистка содержимого файла
         try {
             FileWriter fileWriter = new FileWriter(filePath);
@@ -214,7 +213,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        TaskManager taskManager = loadFromFile(new File(filePath));
+        TaskManager taskManager = new FileBackedTasksManager(Managers.getDefaultHistory(), new File(filePath));
         Task task1 = new Task("Получить посылку", "Посылка от бабушки", TaskStatus.NEW);
         taskManager.addTask(task1);
         Task task2 = new Task("Написать письмо", "Маме об отпуске", TaskStatus.NEW);
@@ -245,7 +244,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         taskManager.getEpicById(3);
         taskManager.getSubtaskById(6);
 
-        System.out.println("История после создания и просмотра задач:");
+        System.out.println("История после создания менеджера задач вне метода load()," +
+                           " создания с его помощью 7 задач и просмотра 3 из них:");
         for (Task task : taskManager.history()) {
             System.out.println(task);
         }
@@ -257,10 +257,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             System.out.println(task);
         }
         System.out.println();
-        System.out.println("Результат сравнения списка задач после создания и просмотра задач," +
-                "восстановления информации из файла:");
-        System.out.println(taskManager.getTasks().equals(taskManagerNew.getTasks()) &&
-                taskManager.getEpics().equals(taskManagerNew.getEpics()) &&
-                taskManager.getSubtasks().equals(taskManagerNew.getSubtasks()));
+        System.out.println("Результат сопоставления всех типов задач, менеджеры которых" +
+                           " созданы вне метода load() и в нем:");
+        System.out.println(taskManagerNew.getTasks().equals(taskManager.getTasks()) &&
+                           taskManagerNew.getEpics().equals(taskManager.getEpics()) &&
+                           taskManagerNew.getSubtasks().equals(taskManager.getSubtasks()));
     }
 }
