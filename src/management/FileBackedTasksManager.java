@@ -3,6 +3,9 @@ package management;
 import types.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -206,13 +209,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 "IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
         // для тестирования - очистка содержимого файла
         try {
-            FileWriter fileWriter = new FileWriter(filePath);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write("");
-            bufferedWriter.close();
-        } catch (Exception e) {
+            BufferedWriter bw = Files.newBufferedWriter(Path.of(filePath), StandardOpenOption.TRUNCATE_EXISTING);
+            bw.close();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
         TaskManager taskManager = new FileBackedTasksManager(Managers.getDefaultHistory(), new File(filePath));
         Task task1 = new Task("Получить посылку", "Посылка от бабушки", TaskStatus.NEW);
         taskManager.addTask(task1);

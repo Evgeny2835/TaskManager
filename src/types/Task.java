@@ -3,10 +3,10 @@ package types;
 import java.util.Objects;
 
 public class Task {
-    private final String name;
-    private final String description;
-    private TaskStatus status;
-    private int id;
+    protected final String name;
+    protected final String description;
+    protected TaskStatus status;
+    protected int id;
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
