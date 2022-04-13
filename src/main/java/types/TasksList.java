@@ -1,6 +1,6 @@
 package types;
 
-public enum TypesOfTasks {
+public enum TasksList {
     TASK,
     EPIC,
     SUBTASK

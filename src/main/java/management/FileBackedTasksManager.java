@@ -1,12 +1,11 @@
 package management;
 
 import types.*;
-
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
@@ -43,31 +42,35 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     break;
                 }
                 String[] split = line.split(",");
-                if (TypesOfTasks.TASK.toString().equals(split[1])) {
+                if (TasksList.TASK.toString().equals(split[1])) {
                     Task task = new Task(split[2],
                             split[4],
-                            TaskStatus.valueOf(split[3]));
+                            TasksStatus.valueOf(split[3]),
+                            Optional.of(LocalDateTime.parse(split[5], Task.formatter)),
+                            Optional.of(Duration.parse(split[6])));
                     task.setId(Integer.parseInt(split[0]));
-                    fileBackedTasksManager.addTask(task);
+                    fileBackedTasksManager.addNewTask(task);
                     if (task.getId() > maxIdTaskInFile) {
                         maxIdTaskInFile = task.getId();
                     }
-                } else if ((TypesOfTasks.EPIC.toString().equals(split[1]))) {
+                } else if ((TasksList.EPIC.toString().equals(split[1]))) {
                     Epic epic = new Epic(split[2],
                             split[4],
-                            TaskStatus.valueOf(split[3]));
+                            TasksStatus.valueOf(split[3]));
                     epic.setId(Integer.parseInt(split[0]));
-                    fileBackedTasksManager.addEpic(epic);
+                    fileBackedTasksManager.addNewTask(epic);
                     if (epic.getId() > maxIdTaskInFile) {
                         maxIdTaskInFile = epic.getId();
                     }
-                } else if ((TypesOfTasks.SUBTASK.toString().equals(split[1]))) {
+                } else if ((TasksList.SUBTASK.toString().equals(split[1]))) {
                     Subtask subtask = new Subtask(split[2],
                             split[4],
-                            TaskStatus.valueOf(split[3]),
-                            Integer.parseInt(split[5]));
+                            TasksStatus.valueOf(split[3]),
+                            Optional.of(LocalDateTime.parse(split[5], Task.formatter)),
+                            Optional.of(Duration.parse(split[6])),
+                            Integer.parseInt(split[7]));
                     subtask.setId(Integer.parseInt(split[0]));
-                    fileBackedTasksManager.addSubtask(subtask);
+                    fileBackedTasksManager.addNewTask(subtask);
                     if (subtask.getId() > maxIdTaskInFile) {
                         maxIdTaskInFile = subtask.getId();
                     }
@@ -82,7 +85,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public void save() {
         try (Writer fileWriter = new FileWriter(file.toString())) {
-            fileWriter.write("id,type,name,status,description,epic");
+            fileWriter.write("id,type,name,status,description,startTime,duration,epic");
             if (!tasks.isEmpty()) {
                 for (Task task : tasks.values()) {
                     fileWriter.write("\n" + task.toString());
@@ -130,20 +133,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
-        super.addTask(task);
-        save();
-    }
-
-    @Override
-    public void addEpic(Epic epic) {
-        super.addEpic(epic);
-        save();
-    }
-
-    @Override
-    public void addSubtask(Subtask subtask) {
-        super.addSubtask(subtask);
+    public void addNewTask(Task task) {
+        super.addNewTask(task);
         save();
     }
 
@@ -202,67 +193,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Subtask subtask = super.getSubtaskById(id);
         save();
         return subtask;
-    }
-
-    public static void main(String[] args) {
-        String filePath = "/home/user/Yandex.Disk/STORAGE/LEARNING/" +
-                "IT/Yandex/SPRINTS/5/storageForFinalSprints/history.csv";
-        // для тестирования - очистка содержимого файла
-        try {
-            BufferedWriter bw = Files.newBufferedWriter(Path.of(filePath), StandardOpenOption.TRUNCATE_EXISTING);
-            bw.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        TaskManager taskManager = new FileBackedTasksManager(Managers.getDefaultHistory(), new File(filePath));
-        Task task1 = new Task("Получить посылку", "Посылка от бабушки", TaskStatus.NEW);
-        taskManager.addTask(task1);
-        Task task2 = new Task("Написать письмо", "Маме об отпуске", TaskStatus.NEW);
-        taskManager.addTask(task2);
-        Epic epic1 = new Epic("Выезд на рыбалку", "На озеро с Петром", TaskStatus.NEW);
-        taskManager.addEpic(epic1);
-        Subtask subTask1Epic1 = new Subtask("Подготовить удочки",
-                "Осмотр и ремонт удочек",
-                TaskStatus.NEW,
-                3);
-        taskManager.addSubtask(subTask1Epic1);
-        Subtask subTask2Epic1 = new Subtask("Подготовить наживку",
-                "Купить наживку в магазине или добыть в поле",
-                TaskStatus.NEW,
-                3);
-        taskManager.addSubtask(subTask2Epic1);
-        Subtask subTask3Epic1 = new Subtask("Подготовить одежду",
-                "Проверить плащ и палатку",
-                TaskStatus.NEW,
-                3);
-        taskManager.addSubtask(subTask3Epic1);
-        Epic epic2 = new Epic("Выезд в отпуск",
-                "Место назначения - Сочи",
-                TaskStatus.NEW);
-        taskManager.addEpic(epic2);
-
-        taskManager.getTaskById(2);
-        taskManager.getEpicById(3);
-        taskManager.getSubtaskById(6);
-
-        System.out.println("История после создания менеджера задач вне метода load()," +
-                           " создания с его помощью 7 задач и просмотра 3 из них:");
-        for (Task task : taskManager.history()) {
-            System.out.println(task);
-        }
-
-        TaskManager taskManagerNew = loadFromFile(new File(filePath));
-        System.out.println();
-        System.out.println("История после восстановления информации из файла:");
-        for (Task task : taskManagerNew.history()) {
-            System.out.println(task);
-        }
-        System.out.println();
-        System.out.println("Результат сопоставления всех типов задач, менеджеры которых" +
-                           " созданы вне метода load() и в нем:");
-        System.out.println(taskManagerNew.getTasks().equals(taskManager.getTasks()) &&
-                           taskManagerNew.getEpics().equals(taskManager.getEpics()) &&
-                           taskManagerNew.getSubtasks().equals(taskManager.getSubtasks()));
     }
 }

@@ -1,6 +1,6 @@
 package types;
 
-public enum TaskStatus {
+public enum TasksStatus {
     NEW,
     DONE,
     IN_PROGRESS

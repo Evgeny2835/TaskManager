@@ -1,6 +1,6 @@
-package id;
+package counters;
 
-public class IDCounter {
+public class tasksID {
     private int idCounter;
 
     public int getIdCounter() {
