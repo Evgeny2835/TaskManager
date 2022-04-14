@@ -1,7 +1,5 @@
 package management;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import types.TasksStatus;
 import types.Epic;
@@ -18,26 +16,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static types.TasksStatus.NEW;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-    T taskManager;
-    Task task1 = new Task("task1Name",
+    protected T taskManager;
+    protected Task task1 = new Task("task1Name",
             "task1Description",
             TasksStatus.NEW,
             Optional.of(LocalDateTime.of(2022, 5, 1, 10, 0)),
             Optional.of(Duration.ofMinutes(60 * 24)));
-    Task task2 = new Task("task2Name",
+    protected Task task2 = new Task("task2Name",
             "task2Description",
             TasksStatus.NEW,
             Optional.of(LocalDateTime.of(2022, 5, 3, 10, 0)),
             Optional.of(Duration.ofMinutes(60)));
-    Epic epic1 = new Epic("Epic1Name", "Epic1Description", NEW);
-    Epic epic2 = new Epic("Epic2Name", "Epic2Description", NEW);
-
-    abstract void setManager();
-
-    @BeforeEach
-    public void beforeEach() {
-        setManager();
-    }
+    protected Epic epic1 = new Epic("Epic1Name", "Epic1Description", NEW);
+    protected Epic epic2 = new Epic("Epic2Name", "Epic2Description", NEW);
 
     @Test
     public void addNewTask() {
