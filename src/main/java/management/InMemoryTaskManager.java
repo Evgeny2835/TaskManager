@@ -1,7 +1,6 @@
 package management;
 
 import java.util.*;
-
 import counters.tasksID;
 import types.Epic;
 import types.Subtask;
@@ -38,48 +37,6 @@ public class InMemoryTaskManager implements TaskManager {
                 break;
         }
    }
-
-    private void addTask(Task task) {
-        if (tasks.containsKey(task.getId())) {
-            return;
-        }
-        if (task.getId() == 0) {
-            task.setId(idCounter.getIdCounter());
-        }
-        if (checkUniqueTimeOfTask(task)) {
-            tasks.put(task.getId(), task);
-            tasksSortedByStartTime.add(task);
-        }
-    }
-
-    private void addEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())) {
-            return;
-        }
-        if (epic.getSubtasksOfEpic().isEmpty()) {
-            if (epic.getId() == 0) {
-                epic.setId(idCounter.getIdCounter());
-            }
-            epics.put(epic.getId(), epic);
-        }
-    }
-
-    private void addSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())) {
-            return;
-        }
-        if (epics.containsKey(subtask.getIdEpic())) {
-            if (subtask.getId() == 0) {
-                subtask.setId(idCounter.getIdCounter());
-            }
-            if (checkUniqueTimeOfTask(subtask)) {
-                subtasks.put(subtask.getId(), subtask);
-                tasksSortedByStartTime.add(subtask);
-                Epic epic = epics.get(subtask.getIdEpic());
-                epic.addSubtasksOfEpic(subtask);
-            }
-        }
-    }
 
     @Override
     public void updateTask(Task task) {
@@ -220,13 +177,55 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        return tasksSortedByStartTime;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(tasksSortedByStartTime);
     }
 
     @Override
     public List<Task> history() {
         return historyManager.getHistory();
+    }
+
+    private void addTask(Task task) {
+        if (tasks.containsKey(task.getId())) {
+            return;
+        }
+        if (task.getId() == 0) {
+            task.setId(idCounter.getIdCounter());
+        }
+        if (checkUniqueTimeOfTask(task)) {
+            tasks.put(task.getId(), task);
+            tasksSortedByStartTime.add(task);
+        }
+    }
+
+    private void addEpic(Epic epic) {
+        if (epics.containsKey(epic.getId())) {
+            return;
+        }
+        if (epic.getSubtasksOfEpic().isEmpty()) {
+            if (epic.getId() == 0) {
+                epic.setId(idCounter.getIdCounter());
+            }
+            epics.put(epic.getId(), epic);
+        }
+    }
+
+    private void addSubtask(Subtask subtask) {
+        if (subtasks.containsKey(subtask.getId())) {
+            return;
+        }
+        if (epics.containsKey(subtask.getIdEpic())) {
+            if (subtask.getId() == 0) {
+                subtask.setId(idCounter.getIdCounter());
+            }
+            if (checkUniqueTimeOfTask(subtask)) {
+                subtasks.put(subtask.getId(), subtask);
+                tasksSortedByStartTime.add(subtask);
+                Epic epic = epics.get(subtask.getIdEpic());
+                epic.addSubtasksOfEpic(subtask);
+            }
+        }
     }
 
     private boolean isEqualsSubtasks(List<Subtask> list1, List<Subtask> list2) {

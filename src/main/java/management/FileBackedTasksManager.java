@@ -8,14 +8,18 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
 
     public FileBackedTasksManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
     }
 
-    static FileBackedTasksManager loadFromFile(File file) {
+    public FileBackedTasksManager(HistoryManager historyManager) {
+        super(historyManager);
+    }
+
+    public static FileBackedTasksManager loadFromFile(File file) {
         int maxIdTaskInFile = 0;
         HistoryManager historyManager = Managers.getDefaultHistory();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(historyManager, file);
@@ -77,13 +81,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException ex) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException(ex.getMessage());
         }
         fileBackedTasksManager.idCounter.setIdCounter(maxIdTaskInFile);
         return fileBackedTasksManager;
     }
 
-    public void save() {
+    protected void save() {
         try (Writer fileWriter = new FileWriter(file.toString())) {
             fileWriter.write("id,type,name,status,description,startTime,duration,epic");
             if (!tasks.isEmpty()) {
@@ -110,7 +114,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileWriter.write(String.join(",", idList));
             }
         } catch (IOException ex) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException(ex.getMessage());
         }
     }
 

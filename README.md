@@ -1,4 +1,4 @@
 # java-sprint2-hw
-Six sprint homework
+Seven sprint homework
 
-sprint6-hw
+sprint7-hw

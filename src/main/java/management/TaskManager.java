@@ -41,7 +41,7 @@ public interface TaskManager {
 
     List<Subtask> getSubtasks();
 
-    TreeSet<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 
     List<Subtask> getSubtasksOfEpic(int id);
 

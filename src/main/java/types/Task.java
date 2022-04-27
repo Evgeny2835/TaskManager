@@ -71,6 +71,10 @@ public class Task {
         this.id = id;
     }
 
+    public void setStatus(TasksStatus status) {
+        this.status = status;
+    }
+
     public TasksList getType() {
         return TasksList.TASK;
     }
