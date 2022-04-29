@@ -9,7 +9,7 @@ import java.net.http.HttpResponse;
 public class KVTaskClient {
     private final URI url;
     private final HttpClient httpClient;
-    private String apiKey;
+    private final String apiKey;
 
     public KVTaskClient(URI url) throws IOException, InterruptedException {
         httpClient = HttpClient.newHttpClient();

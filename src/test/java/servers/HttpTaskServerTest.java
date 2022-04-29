@@ -1,7 +1,6 @@
-package Servers;
+package servers;
 
 import com.google.gson.Gson;
-import management.HTTPTaskManager;
 import management.Managers;
 import management.TaskManager;
 import org.junit.jupiter.api.*;
@@ -25,7 +24,7 @@ class HttpTaskServerTest {
     private HttpTaskServer httpTaskServer;
     private TaskManager taskManager;
     private final Gson gson = new Gson();
-    HttpClient client;
+    private HttpClient client;
     private Task task1;
     private Task task2;
     private Epic epic1;
@@ -37,14 +36,8 @@ class HttpTaskServerTest {
     public void start() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
-
-        try {
-            taskManager = new HTTPTaskManager(Managers.getDefaultHistory(),
-                    URI.create("http://localhost:8078"));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        taskManager = Managers.getDefault(Managers.getDefaultHistory(),
+                URI.create("http://localhost:8078"));
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
         client = HttpClient.newHttpClient();
