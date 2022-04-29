@@ -5,9 +5,9 @@ import java.net.URI;
 
 public class Managers {
 
-    public static TaskManager getDefault(HistoryManager historyManager, URI url) {
+    public static TaskManager getDefault() {
         try {
-            return new HTTPTaskManager(historyManager, url);
+            return new HTTPTaskManager(Managers.getDefaultHistory(), URI.create("http://localhost:8078"));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

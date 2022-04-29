@@ -14,7 +14,6 @@ import types.TasksStatus;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +39,7 @@ class HTTPTaskManagerTest {
         kvServer = new KVServer();
         kvServer.start();
         historyManager = Managers.getDefaultHistory();
-        taskManager = Managers.getDefault(historyManager, URI.create("http://localhost:8078"));
+        taskManager = Managers.getDefault();
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
         task1 = new Task("task1Name",

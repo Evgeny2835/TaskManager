@@ -36,8 +36,7 @@ class HttpTaskServerTest {
     public void start() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
-        taskManager = Managers.getDefault(Managers.getDefaultHistory(),
-                URI.create("http://localhost:8078"));
+        taskManager = Managers.getDefault();
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
         client = HttpClient.newHttpClient();

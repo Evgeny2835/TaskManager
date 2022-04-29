@@ -24,12 +24,19 @@ public class KVTaskClient {
         }
     }
 
+    public KVTaskClient(URI url, String apiKey) {
+        httpClient = HttpClient.newHttpClient();
+        this.url = url;
+        this.apiKey = apiKey;
+    }
+
     public void put(String key, String json) {
         URI requestURI = URI.create(url + "/save/" + key + "?API_KEY=" + apiKey);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(requestURI)
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
+        System.out.println(request);
         try {
             HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
