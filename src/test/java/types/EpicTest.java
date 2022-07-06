@@ -1,16 +1,11 @@
 package types;
 
-import management.HTTPTaskManager;
 import management.InMemoryTaskManager;
 import management.Managers;
 import management.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import servers.HttpTaskServer;
-import servers.KVServer;
 
-import java.net.URI;
-import java.net.http.HttpClient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,10 +19,7 @@ class EpicTest {
 
     @BeforeEach
     public void beforeEach() {
-        //taskManager = Managers.getDefault(Managers.getDefaultHistory());
-
         taskManager = new InMemoryTaskManager(Managers.getDefaultHistory());
-
         epic1 = new Epic("Epic1Name", "Epic1Description", NEW);
         taskManager.addNewTask(epic1);
     }
